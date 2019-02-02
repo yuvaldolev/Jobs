@@ -34,16 +34,6 @@ namespace Jobs
         {
             delete m_AtTime;
         }
-
-        if (m_LastRun != nullptr)
-        {
-            delete m_LastRun;
-        }
-
-        if (m_NextRun != nullptr)
-        {
-            delete m_NextRun;
-        }
     }
 
     bool Job::operator<(const Job& other)
@@ -251,13 +241,7 @@ namespace Jobs
 
     void Job::Run()
     {
-        m_JobFunc();
-
-        if (m_LastRun != nullptr)
-        {
-            delete m_LastRun;
-        }
-        
+        m_JobFunc();        
         m_LastRun = GetLocalTime();
         ScheduleNextRun();
     }
@@ -286,7 +270,7 @@ namespace Jobs
             throw JobException("Start Day Can Only Be Used With Weeks Unit");
         }
 
-        if (m_LastRun == nullptr)
+        if (m_NextRun == nullptr)
         {
             m_NextRun = GetLocalTime();
         }

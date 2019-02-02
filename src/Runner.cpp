@@ -70,6 +70,8 @@ namespace Jobs
 
     void Runner::CancelJob(Job* job)
     {
+        // TODO(yuval): Remove the job from the jobs vector
+        
         if (job != nullptr)
         {
             delete job;
@@ -121,9 +123,4 @@ namespace Jobs
         job->Run();
     }
 }
-
-
-
-
-
 
