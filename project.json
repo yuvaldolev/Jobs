@@ -1,0 +1,16 @@
+{
+    "id": "Jobs",
+    "type": "package",
+    "value": {
+        "author": "Yuval Dolev",
+        "description": "A job schedular that uses natural sounding syntax for C++",
+        "version": "1.0.0",
+        "repository": null,
+        "license": null,
+        "language": "cpp"
+    },
+    "lang.cpp": {
+        "include": ["include"],
+	    "cpp-standard": "c++17"
+    }
+}
