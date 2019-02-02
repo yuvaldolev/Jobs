@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <thread>
 
 // TODO(yuval): Mabe use a sorted data structure to store jobs?
 
@@ -16,6 +17,15 @@ namespace Jobs
         Runner();
         ~Runner();
 
+        // Job Run Loop
+        void Run();
+        
+        // Async Job Run Loop
+        void RunAsync();
+
+        // Stops The Job Run Loop
+        void Stop();
+        
         // Adding Jobs
         void AddJob(Job* job);
         
@@ -25,7 +35,7 @@ namespace Jobs
 
         // Job Canceling
         void Clear();
-        static void CancelJob(Job* job);
+        void CancelJob(Job* job);
 
         // Schedules a new job
         Job& Every(int interval = 1);
@@ -45,9 +55,14 @@ namespace Jobs
         // Finds the next running job and returns its run time
         tm* NextRunningJobTime() const;
 
+        // Joins and deletes the async runner thread
+        void TerminateAsyncRunner();
+
     // Private Fields
     private:
         std::vector<Job*> m_Jobs;
+        bool m_IsRunning;
+        std::thread* m_AsyncRunner;
     };    
 }
 

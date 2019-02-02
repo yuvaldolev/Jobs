@@ -12,6 +12,21 @@ namespace Jobs
         return defaultRunner.Every(interval);
     }
 
+    void Run()
+    {
+        defaultRunner.Run();
+    }
+
+    void RunAsync()
+    {
+        defaultRunner.RunAsync();
+    }
+
+    void Stop()
+    {
+        defaultRunner.Stop();
+    }
+    
     void RunPending()
     {
         defaultRunner.RunPending();
@@ -42,3 +57,6 @@ namespace Jobs
         return defaultRunner.IdleSeconds();
     }
 }
+
+
+

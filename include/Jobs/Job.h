@@ -9,6 +9,9 @@
 
 #define JOB_FUNC_TYPE std::function<void()>
 
+#define BIND_FN(fn) std::bind(&fn)
+#define BIND_METHOD(method, obj) std::bind(&method, obj)
+
 namespace Jobs
 {
     class Runner;

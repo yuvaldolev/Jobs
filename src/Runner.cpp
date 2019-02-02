@@ -5,14 +5,46 @@
 namespace Jobs
 {
     Runner::Runner()
+        : m_IsRunning(false), m_AsyncRunner(nullptr)
     {
     }
 
     Runner::~Runner()
     {
+        if (m_IsRunning)
+        {
+            Stop();
+        }
+        
         Clear();
     }
 
+    void Runner::Run()
+    {
+        if (m_IsRunning)
+        {
+            return;
+        }
+
+        m_IsRunning = true;
+        
+        while (m_IsRunning)
+        {
+            RunPending();
+        }
+    }
+
+    void Runner::RunAsync()
+    {
+        m_AsyncRunner = new std::thread(&Runner::Run, this);
+    }
+
+    void Runner::Stop()
+    {
+        m_IsRunning = false;
+        TerminateAsyncRunner();
+    }
+    
     void Runner::AddJob(Job* job)
     {
         if (job != nullptr)
@@ -70,7 +102,7 @@ namespace Jobs
 
     void Runner::CancelJob(Job* job)
     {
-        // TODO(yuval): Remove the job from the jobs vector
+        m_Jobs.erase(std::remove(m_Jobs.begin(), m_Jobs.end(), job), m_Jobs.end());
         
         if (job != nullptr)
         {
@@ -92,7 +124,7 @@ namespace Jobs
             return std::string("No Job To Run");
         }
 
-        return std::string(std::asctime(nextRunTime));
+        return "Next Run: " + std::string(std::asctime(nextRunTime));
     }
 
     int Runner::IdleSeconds() const
@@ -106,6 +138,11 @@ namespace Jobs
 
         return static_cast<int>(std::difftime(std::mktime(nextRunTime), std::time(nullptr)));
     }
+
+    void Runner::RunJob(Job* job)
+    {
+        job->Run();
+    }
     
     tm* Runner::NextRunningJobTime() const
     {
@@ -118,9 +155,13 @@ namespace Jobs
         return closestJob == nullptr ? nullptr : closestJob->NextRun();
     }
 
-    void Runner::RunJob(Job* job)
+    void Runner::TerminateAsyncRunner()
     {
-        job->Run();
+        if (m_AsyncRunner != nullptr)
+        {
+            m_AsyncRunner->join();
+            delete m_AsyncRunner;
+        }
     }
 }
 
