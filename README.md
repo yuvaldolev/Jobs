@@ -69,3 +69,68 @@ The following functions are available in Jobs:
 |--------- | ----------- |
 | NextRun() | Returns a string that date and time when the next job should run |
 | IdleSeconds() | Returns the number of seconds until the next run |
+
+# Examples
+Running jobs synchronously:
+```c++
+void PrintHello()
+{
+    std::cout << "Hello World" << std::endl;
+}
+
+int main()
+{
+    Jobs::Every(5).Seconds().Do(BIND_FN(PrintHello));
+    Jobs::Run();
+    return 0;
+}
+```
+
+Running jobs asynchronously:
+```c++
+void PrintHi()
+{
+    std::cout << "Hi" << std::endl;
+}
+
+int main()
+{
+    Jobs::Every().Hour().Do(BIND_FN(PrintHi));
+    Jobs::RunAsync();
+    return 0;
+}
+```
+
+Different examples of using the Jobs API:
+```c++
+// Seconds
+Jobs::Every().Second().Do(BIND_FN(func));
+Jobs::Every(23).Seconds().Do(BIND_FN(func));
+
+// Minutes
+Jobs::Every().Minute().Do(BIND_FN(func));
+Jobs::Every(4).Minutes().Do(BIND_FN_func));
+
+// Hours
+Jobs::Every().Hour().Do(BIND_FN(func));
+Jobs::Every(18).Hours().Do(BIND_FN(func));
+
+// Days
+Jobs::Every().Day().Do(BIND_FN(func));
+Jobs::Every(2).Days().Do(BIND_FN(func));
+
+// Weeks
+Jobs::Every().Week().Do(BIND_FN(func));
+Jobs::Every(6).Weeks().Do(BIND_FN(func));
+
+// Week Days
+Jobs::Every().Monday().Do(BIND_FN(func));
+Jobs::Every().Friday().Do(BIND_FN(func));
+
+// Specific Times
+Jobs::Every().Day().At("12:45").Do(BIND_FN(func));
+Jobs::Every().Tuesday().At("18:01:58").Do(BIND_FN(func));
+Jobs::Every().Hour().At("10").Do(BIND_FN(func)); // Specific minute every hour
+Jobs::Every(7).Minutes().At("25").Do(BIND_FN(func)); // Specific second every minute
+```
+
