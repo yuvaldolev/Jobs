@@ -136,7 +136,7 @@ Jobs::Every().Friday().Do(BIND_FN(func));
 Jobs::Every().Day().At("12:45").Do(BIND_FN(func));
 Jobs::Every().Tuesday().At("18:01:58").Do(BIND_FN(func));
 Jobs::Every().Hour().At("10").Do(BIND_FN(func)); // Specific minute every hour
-Jobs::Every(7).Minutes().At("25").Do(BIND_FN(func)); // Specific second every minute
+Jobs::Every(7).Minutes().At("25").Do(BIND_FN(func)); // Specific second every 7 minutes
 
 // Random Time In Range
 Jobs::Every(5).To(7).Minutes().Do(BIND_FN(func));
