@@ -3,10 +3,10 @@
     "type": "package",
     "value": {
         "author": "Yuval Dolev",
-        "description": "A job schedular that uses natural sounding syntax for C++",
+        "description": "A job scheduler that uses natural sounding syntax for C++",
         "version": "1.0.0",
-        "repository": null,
-        "license": null,
+        "repository": "Jobs",
+        "license": "MIT License",
         "language": "cpp"
     },
     "lang.cpp": {

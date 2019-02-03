@@ -7,11 +7,6 @@ namespace Jobs
 {
     Runner defaultRunner;
 
-    Job& Every(int interval = 1)
-    {
-        return defaultRunner.Every(interval);
-    }
-
     void Run()
     {
         defaultRunner.Run();
@@ -20,6 +15,11 @@ namespace Jobs
     void RunAsync()
     {
         defaultRunner.RunAsync();
+    }
+
+    Job& Every(int interval = 1)
+    {
+        return defaultRunner.Every(interval);
     }
 
     void Stop()

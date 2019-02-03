@@ -116,7 +116,7 @@ namespace Jobs
         // Schedules the job to run in a random time in range: from 'every' to 'latests'
         Job& To(int latest);
 
-        // Specifies the function that should be called every time the job runs
+        // Specifies the function that will be called every time the job runs
         Job& Do(const JOB_FUNC_TYPE& jobFunc);
 
         // Runs the job and immediately reschedules it
