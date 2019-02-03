@@ -29,7 +29,7 @@ If not, you need to run the bake in Jobs' directory, the run bake in the depende
 ## Functionality
 The following functions are available in Jobs:
 
-### Job Scheduling Functions:
+#### Job Scheduling Functions:
 | Function | Description |
 |--------- | ----------- |
 | Every(interval: int) | Schedules a new job with the given interval |
@@ -54,7 +54,7 @@ The following functions are available in Jobs:
 | To(latest: int) | Makes the job run in a random time in range: interval - latest |
 | Do(jobFunc: std::function<void()>) | Specified the job function that will be called every time the job runs |
 
-### Job Running Functions:
+#### Job Running Functions:
 | Function | Description |
 |--------- | ----------- |
 | Run() | Starts the job run loop |
@@ -63,13 +63,13 @@ The following functions are available in Jobs:
 | RunPending() | Runs all the pending jobs once |
 | RunAll() | Runs all the jobs once |
 
-### Job Management Functions:
+#### Job Management Functions:
 | Function | Description |
 |--------- | ----------- |
 | Clear() | Cancels and removes all the jobs |
 | CancelJob(job: Job*) | Cancels and removes a specific job |
 
-### Job Info Functions:
+#### Job Info Functions:
 | Function | Description |
 |--------- | ----------- |
 | NextRun() | Returns a string that date and time when the next job should run |
