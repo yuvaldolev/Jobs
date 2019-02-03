@@ -1,7 +1,7 @@
 # Jobs
 Job Scheduling In C++ Made Easy.
 
-Jobs is library that provides an easy to use API that lets you schedule C++ functions to run at a specified time(s) using a human readable syntax.
+Jobs is a library that provides an easy to use API that lets you schedule C++ functions to run at a specified time(s) using a human readable syntax.
 
 ## Contents
 * [Getting Started](#getting-started)
@@ -22,9 +22,13 @@ Then, Add to following line to your project.json under the value key:
 "use": ["Jobs"]
 ```
 
-Then run the bake command.
-If both projects' directories (Jobs, and the project that uses it) are in the same directory, then all you need to do is run bake in the root directory.
-If not, you need to run the bake in Jobs' directory, the run bake in the dependent project's directory.
+Last, To build and link Jobs run:
+```
+bake
+```
+
+- If both projects' directories (Jobs, and the project that uses it) are in the same directory, then all you need to do is run bake in the root directory.
+- If not, you need to run bake in Jobs' directory, and then run bake in the dependent project's directory.
 
 ## Functionality
 The following functions are available in Jobs:
