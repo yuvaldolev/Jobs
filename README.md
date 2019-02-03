@@ -3,7 +3,12 @@ Job Scheduling In C++ Made Easy.
 
 Jobs is library that provides an easy to use API that lets you schedule C++ functions to run at a specified time(s) using a human readable syntax.
 
-# Getting Started
+## Contents
+* [Getting Started](#getting-started)
+* [Functionality](#functionality)
+* [Examples](#examples)
+
+## Getting Started
 Jobs uses [bake](https://github.com/SanderMertens/bake) as its build system. bake makes it easy to build Jobs and link it to any project on your computer. For details on how to use bake see [bake's github repository](https://github.com/SanderMertens/bake).
 
 #### Using Jobs with your project:
@@ -21,7 +26,7 @@ Then run the bake command.
 If both projects' directories (Jobs, and the project that uses it) are in the same directory, then all you need to do is run bake in the root directory.
 If not, you need to run the bake in Jobs' directory, the run bake in the dependent project's directory.
 
-# Functionality
+## Functionality
 The following functions are available in Jobs:
 
 ### Job Scheduling Functions:
@@ -70,7 +75,7 @@ The following functions are available in Jobs:
 | NextRun() | Returns a string that date and time when the next job should run |
 | IdleSeconds() | Returns the number of seconds until the next run |
 
-# Examples
+## Examples
 Running jobs synchronously:
 ```c++
 void PrintHello()
