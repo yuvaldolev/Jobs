@@ -37,6 +37,13 @@ namespace Jobs
         void Clear();
         void CancelJob(Job* job);
 
+        // Job Rescheduling
+        void ChangeInterval(Job* job);
+        
+        // Finds a job and returns a pointer to it
+        // TODO(yuval): Define the function pointer time in Job.h!!!
+        Job* FindJob(void(*func)()) const;
+        
         // Schedules a new job
         Job& Every(int interval = 1);
 

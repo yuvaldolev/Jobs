@@ -69,6 +69,12 @@ namespace Jobs
             return m_NextRun;
         }
 
+        // Returns the job function
+        inline const JOB_FUNC_TYPE& JobFunc() const
+        {
+            return m_JobFunc;
+        }
+        
         // Checks if the job should be run now
         inline bool ShouldRun() const
         {
@@ -79,7 +85,7 @@ namespace Jobs
             
             return std::time(nullptr) >= std::mktime(m_NextRun);
         }
-        
+
         // Seconds
         Job& Second();
         Job& Seconds();
@@ -122,6 +128,9 @@ namespace Jobs
         // Runs the job and immediately reschedules it
         void Run();
 
+        // Changes the job's interval
+        void ChangeInterval(int interval);
+        
     // Private Methods
     private:
         // Computes the instant when this job should run next

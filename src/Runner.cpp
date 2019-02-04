@@ -110,6 +110,14 @@ namespace Jobs
         }
     }
 
+    Job* Runner::FindJob(void(*func)()) const
+    {
+        return *std::find_if(m_Jobs.begin(), m_Jobs.end(), [&func](Job* job)
+        {
+            return func == *job->JobFunc().target<void(*)()>();
+        });
+    }
+    
     Job& Runner::Every(int interval)
     {
         return *(new Job(interval, this));
@@ -161,6 +169,7 @@ namespace Jobs
         {
             m_AsyncRunner->join();
             delete m_AsyncRunner;
+            m_AsyncRunner = nullptr;
         }
     }
 }
