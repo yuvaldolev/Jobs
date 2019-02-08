@@ -56,7 +56,7 @@ The following functions are available in Jobs:
 | Saturday() | Makes the job run every Saturday |
 | At() | Makes the job at a specific time (for example - 10:30:22) |
 | To(latest: int) | Makes the job run in a random time in range: interval - latest |
-| Do(jobFunc: std::function<void()>) | Specified the job function that will be called every time the job runs |
+| Do(jobFunc: std::function<void(void)>) | Specifies the job function that will be called every time the job runs |
 
 #### Job Running Functions:
 | Function | Description |
@@ -78,6 +78,16 @@ The following functions are available in Jobs:
 |--------- | ----------- |
 | NextRun() | Returns a string that date and time when the next job should run |
 | IdleSeconds() | Returns the number of seconds until the next run |
+
+### Job Querying Functions:
+| Function | Description |
+|--------- | ----------- |
+| FindJob(fn: std::function<void(void)> | Finds a running job and returns a pointer to it |
+
+### Changing Existing Job's Properties:
+| Function | Description |
+|--------- | ----------- |
+| RunEvery(interval: int) | Changes an existing's interval |
 
 ## Examples
 Running jobs synchronously:
