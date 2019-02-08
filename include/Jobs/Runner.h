@@ -36,13 +36,10 @@ namespace Jobs
         // Job Canceling
         void Clear();
         void CancelJob(Job* job);
-
-        // Job Rescheduling
-        void ChangeInterval(Job* job);
         
         // Finds a job and returns a pointer to it
-        // TODO(yuval): Define the function pointer time in Job.h!!!
-        Job* FindJob(void(*func)()) const;
+        // TODO(yuval): Define the function pointer type in Job.h!!!
+        Job* FindJob(const std::function<void(void)>& fn);
         
         // Schedules a new job
         Job& Every(int interval = 1);
@@ -72,4 +69,5 @@ namespace Jobs
         std::thread* m_AsyncRunner;
     };    
 }
+
 

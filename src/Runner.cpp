@@ -1,6 +1,10 @@
 #include "Jobs/Runner.h"
 #include "Jobs/Job.h"
 #include <algorithm>
+#include <iostream>
+#include <typeinfo>
+
+#define GET_FN_ADDR(fn) *(long*)(char*)&fn
 
 namespace Jobs
 {
@@ -110,12 +114,14 @@ namespace Jobs
         }
     }
 
-    Job* Runner::FindJob(void(*func)()) const
+    Job* Runner::FindJob(const JOB_FUNC_TYPE& fn)
     {
-        return *std::find_if(m_Jobs.begin(), m_Jobs.end(), [&func](Job* job)
+        std::vector<Job*>::iterator it = std::find_if(m_Jobs.begin(), m_Jobs.end(), [fn](Job* job)
         {
-            return func == *job->JobFunc().target<void(*)()>();
+            return job != nullptr && GET_FN_ADDR(fn) == GET_FN_ADDR(job->JobFunc());
         });
+        
+        return it == m_Jobs.end() ? nullptr : *it;
     }
     
     Job& Runner::Every(int interval)

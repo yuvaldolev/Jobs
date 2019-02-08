@@ -246,6 +246,11 @@ namespace Jobs
         ScheduleNextRun();
     }
 
+    void Job::RunEvery(int interval)
+    {
+        m_Interval = interval;
+    }
+
     void Job::ScheduleNextRun()
     {
         int interval = 1;

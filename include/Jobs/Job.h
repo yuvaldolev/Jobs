@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#define JOB_FUNC_TYPE std::function<void()>
+#define JOB_FUNC_TYPE std::function<void(void)>
 
 #define BIND_FN(fn) std::bind(&fn)
 #define BIND_METHOD(method, obj) std::bind(&method, obj)
@@ -60,9 +60,6 @@ namespace Jobs
         Job(int interval, Runner* runner = nullptr);
         ~Job();
 
-        // Operator Overloadings
-        bool operator<(const Job& other);
-
         // Returns the next job run time
         inline tm* NextRun() const
         {
@@ -85,6 +82,9 @@ namespace Jobs
             
             return std::time(nullptr) >= std::mktime(m_NextRun);
         }
+        
+        // Operator Overloadings
+        bool operator<(const Job& other);
 
         // Seconds
         Job& Second();
@@ -129,7 +129,7 @@ namespace Jobs
         void Run();
 
         // Changes the job's interval
-        void ChangeInterval(int interval);
+        void RunEvery(int interval);
         
     // Private Methods
     private:

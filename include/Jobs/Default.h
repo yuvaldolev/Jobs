@@ -5,7 +5,7 @@
 
 namespace Jobs
 {
-    Runner defaultRunner;
+    static Runner defaultRunner;
 
     void Run()
     {
@@ -47,6 +47,11 @@ namespace Jobs
         defaultRunner.CancelJob(job);
     }
 
+    Job* FindJob(const JOB_FUNC_TYPE& fn)
+    {
+        return defaultRunner.FindJob(func);
+    }
+    
     std::string NextRun()
     {
         return defaultRunner.NextRun();
