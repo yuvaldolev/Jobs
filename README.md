@@ -79,12 +79,12 @@ The following functions are available in Jobs:
 | NextRun() | Returns a string that date and time when the next job should run |
 | IdleSeconds() | Returns the number of seconds until the next run |
 
-### Job Querying Functions:
+#### Job Querying Functions:
 | Function | Description |
 |--------- | ----------- |
 | FindJob(fn: std::function<void(void)> | Finds a running job and returns a pointer to it |
 
-### Changing Existing Job's Properties:
+#### Changing Existing Job's Properties:
 | Function | Description |
 |--------- | ----------- |
 | RunEvery(interval: int) | Changes an existing's interval |
