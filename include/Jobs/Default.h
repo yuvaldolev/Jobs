@@ -49,7 +49,7 @@ namespace Jobs
 
     Job* FindJob(const JOB_FUNC_TYPE& fn)
     {
-        return defaultRunner.FindJob(func);
+        return defaultRunner.FindJob(fn);
     }
     
     std::string NextRun()
