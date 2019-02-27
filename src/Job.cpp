@@ -20,10 +20,10 @@ namespace Jobs
     {
         return m_Msg.c_str();
     }
-    
+
     Job::Job(int interval, Runner* runner)
         : m_Interval(interval), m_Latest(-1), m_StartDay(-1),
-          m_AtTime(nullptr), m_LastRun(nullptr), m_NextRun(nullptr),
+          m_AtTime(nullptr), m_LastRun(nullptr),
           m_Runner(runner), m_Gen(m_Rd())
     {
     }
@@ -34,16 +34,6 @@ namespace Jobs
         {
             delete m_AtTime;
         }
-    }
-
-    bool Job::operator<(const Job& other)
-    {
-        if (m_NextRun == nullptr)
-        {
-            return false;
-        }
-
-        return std::mktime(m_NextRun) < std::mktime(other.NextRun());
     }
 
     Job& Job::Second()
@@ -166,12 +156,12 @@ namespace Jobs
 
         std::vector<std::string> splitTime = SplitString(time, ':');
         std::size_t splitTimeSize = splitTime.size();
-        
+
         int hour = 0;
         int minute = 0;
         int second = 0;
         bool shouldThrow = false;
-        
+
         try
         {
             if ((m_Unit == JobUnit::Days || m_StartDay != -1) && splitTimeSize >= 2)
@@ -211,12 +201,12 @@ namespace Jobs
         {
             delete m_AtTime;
         }
-        
+
         m_AtTime = new tm;
         m_AtTime->tm_hour = hour;
         m_AtTime->tm_min = minute;
         m_AtTime->tm_sec = second;
-        
+
         return *this;
     }
 
@@ -229,11 +219,10 @@ namespace Jobs
     Job& Job::Do(const JOB_FUNC_TYPE& jobFunc)
     {
         m_JobFunc = jobFunc;
-        ScheduleNextRun();
 
         if (m_Runner != nullptr)
         {
-            m_Runner->AddJob(this);
+            m_Runner->AddJob(GetNextRun(), this);
         }
 
         return *this;
@@ -241,27 +230,21 @@ namespace Jobs
 
     void Job::Run()
     {
-        m_JobFunc();        
+        m_JobFunc();
         m_LastRun = GetLocalTime();
-        ScheduleNextRun();
     }
 
-    void Job::RunEvery(int interval)
-    {
-        m_Interval = interval;
-    }
-
-    void Job::ScheduleNextRun()
+    std::time_t Job::GetNextRun()
     {
         int interval = 1;
-        
+
         if (m_Latest != -1)
         {
             if (m_Latest < m_Interval)
             {
                 throw JobException("Latest Must Be Greater Then Or Equal To Interval");
             }
-            
+
             std::uniform_int_distribution<uint32_t> uintDist(m_Interval, m_Latest);
             interval = uintDist(m_Gen);
         }
@@ -275,121 +258,122 @@ namespace Jobs
             throw JobException("Start Day Can Only Be Used With Weeks Unit");
         }
 
-        if (m_NextRun == nullptr)
-        {
-            m_NextRun = GetLocalTime();
-        }
-        
-        CalcNextRun(interval);
+        return CalcNextRun(interval);
     }
-    
-    void Job::CalcNextRun(int interval)
+
+    void Job::RunEvery(int interval)
     {
+        m_Interval = interval;
+    }
+
+    std::time_t Job::CalcNextRun(int interval) const
+    {
+        std::tm* nextRun = GetLocalTime();
+
         switch (m_Unit)
         {
         case JobUnit::Seconds:
-            AdjustSeconds(interval);
+            AdjustSeconds(interval, nextRun);
             break;
 
         case JobUnit::Minutes:
-            AdjustMinutes(interval);
+            AdjustMinutes(interval, nextRun);
             break;
 
         case JobUnit::Hours:
-            AdjustHours(interval);
+            AdjustHours(interval, nextRun);
             break;
 
         case JobUnit::Days:
-            AdjustDays(interval);
+            AdjustDays(interval, nextRun);
             break;
 
         case JobUnit::Weeks:
-            AdjustWeeks(interval);
+            AdjustWeeks(interval, nextRun);
             break;
         }
 
-        std::mktime(m_NextRun);
-    }
-    
-    void Job::AdjustSeconds(int interval)
-    {
-        m_NextRun->tm_sec += interval;
+        return std::mktime(nextRun);
     }
 
-    void Job::AdjustMinutes(int interval)
+    void Job::AdjustSeconds(int interval, tm* nextRun) const
     {
-        AtSecond();
-        m_NextRun->tm_min += interval;
+        nextRun->tm_sec += interval;
     }
-    
-    void Job::AdjustHours(int interval)
+
+    void Job::AdjustMinutes(int interval, tm* nextRun) const
     {
-        AtMinute();
-        m_NextRun->tm_hour += interval;
+        AtSecond(nextRun);
+        nextRun->tm_min += interval;
     }
-    
-    void Job::AdjustDays(int interval)
+
+    void Job::AdjustHours(int interval, tm* nextRun) const
     {
-        AtTime();
-        
-        m_NextRun->tm_mday += interval;
+        AtMinute(nextRun);
+        nextRun->tm_hour += interval;
     }
-    
-    void Job::AdjustWeeks(int interval)
+
+    void Job::AdjustDays(int interval, tm* nextRun) const
     {
-        AtTime();
-        
+        AtTime(nextRun);
+        nextRun->tm_mday += interval;
+    }
+
+    void Job::AdjustWeeks(int interval, tm* nextRun) const
+    {
+        AtTime(nextRun);
+
         if (m_StartDay == -1)
         {
-            m_NextRun->tm_mday += interval * 7;
+            nextRun->tm_mday += interval * 7;
         }
         else
         {
-            int daysAhead = m_StartDay - m_NextRun->tm_wday + 1;
+            int daysAhead = m_StartDay - nextRun->tm_wday + 1;
 
             if (daysAhead < 0)
             {
                 daysAhead += 7;
             }
 
-            m_NextRun->tm_mday += daysAhead;
+            nextRun->tm_mday += daysAhead;
         }
     }
 
-    void Job::AtTime()
+    void Job::AtTime(tm* nextRun) const
     {
-        AtSecond();
-        AtMinute();
-        AtHour();
+        AtSecond(nextRun);
+        AtMinute(nextRun);
+        AtHour(nextRun);
     }
-    
-    void Job::AtSecond()
-    {
-        if (m_AtTime != nullptr)
-        {
-            m_NextRun->tm_sec = m_AtTime->tm_sec;
-        }
-    }
-    
-    void Job::AtMinute()
+
+    void Job::AtSecond(tm* nextRun) const
     {
         if (m_AtTime != nullptr)
         {
-            m_NextRun->tm_min = m_AtTime->tm_min;
+            nextRun->tm_sec = m_AtTime->tm_sec;
         }
     }
-    
-    void Job::AtHour()
+
+    void Job::AtMinute(tm* nextRun) const
     {
         if (m_AtTime != nullptr)
         {
-            m_NextRun->tm_hour = m_AtTime->tm_hour;
+            nextRun->tm_min = m_AtTime->tm_min;
         }
     }
-        
+
+    void Job::AtHour(tm* nextRun) const
+    {
+        if (m_AtTime != nullptr)
+        {
+            nextRun->tm_hour = m_AtTime->tm_hour;
+        }
+    }
+
     tm* Job::GetLocalTime()
     {
-        time_t now = std::time(nullptr);
+        std::time_t now = std::time(nullptr);
         return localtime(&now);
     }
 

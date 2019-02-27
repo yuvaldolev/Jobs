@@ -10,10 +10,15 @@
         "language": "cpp"
     },
     "lang.cpp": {
-        "include": ["include"],
+        "include": ["${locate include}"],
         "cpp-standard": "c++17",
         "${os linux}": {
             "lib": ["pthread"]
         }
+    },
+    "dependee": {
+	"lang.cpp": {
+	    "include": ["${locate include}"]
+	}
     }
 }
