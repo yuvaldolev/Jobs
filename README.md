@@ -14,7 +14,7 @@ Jobs uses [bake](https://github.com/SanderMertens/bake) as its build system. bak
 #### Using Jobs with your project:
 First, clone the Jobs repository using:
 ```
-git clone https://github.com/yuvaldolev/Jobs
+git clone --recursive https://github.com/yuvaldolev/Jobs
 ```
 
 Then, Add to following line to your project.json under the value key:
